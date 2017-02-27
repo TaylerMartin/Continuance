@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour {
 
     public float xSpeed;
     public float ySpeed;
-    public KeyCode KeyJump;
     public bool isGrounded;
-    public GameObject sphere;
+    public GameObject timeSphere;
+    public float sphereGrowth;
     Rigidbody rb;
+
+    public KeyCode KeyJump;
+    public KeyCode KeyAccelerate;
+    public KeyCode KeyReverse;
 
     float JumpVelocity;
     float JumpDampening = 0.05f;
@@ -28,6 +32,18 @@ public class PlayerController : MonoBehaviour {
     {
         Movement();
         Vector3 pos = transform.position;
+
+        if (Input.GetKey(KeyAccelerate) || Input.GetKey(KeyReverse))
+        {
+            if (timeSphere.transform.localScale.x < 5.0f)
+            {
+                timeSphere.transform.localScale += new Vector3(sphereGrowth, sphereGrowth, sphereGrowth);
+            }
+        }
+        else if (timeSphere.transform.localScale.x > 2.0f)
+        {
+                timeSphere.transform.localScale -= new Vector3(sphereGrowth, sphereGrowth, sphereGrowth);
+        }
 
         if (JumpVelocity != 0)
         {
@@ -47,9 +63,7 @@ public class PlayerController : MonoBehaviour {
     {
         float x = Input.GetAxis("Horizontal") * xSpeed * Time.deltaTime;
         transform.Translate(x, 0, 0);
-
         
-
         if (Input.GetKeyDown(KeyJump) && isGrounded)
         {
             Jump();
